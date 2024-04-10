@@ -22,11 +22,20 @@ jobs:
           folder: azure-vote
           branch: master
           tag: ${{ github.sha }}
+      - name: Upload manifest
+        uses: actions/upload-artifact@v2
+        with:
+          name: manifest
+          path: azure-vote-all-in-one-redis.yaml
   deployment:
     runs-on: ubuntu-latest
     environment: production
     needs: build
     steps:
+      - name: Download manifest
+        uses: actions/download-artifact@v2
+        with:
+          name: manifest
       - name: Azure login
         id: login
         uses: azure/login@v1.4.3
@@ -47,6 +56,6 @@ jobs:
         with:
           namespace: 'default'
           manifests: |
-             envsubst < azure-vote-all-in-one-redis.yaml
+             azure-vote-all-in-one-redis.yaml
           images: '${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/azure-vote-front:${{ github.sha }}'
           pull-images: false
