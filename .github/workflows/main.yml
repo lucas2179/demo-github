@@ -33,7 +33,7 @@ jobs:
     needs: build
     steps:
       - name: Download manifest
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4.1.7
         with:
           name: manifest
       - name: Azure login
